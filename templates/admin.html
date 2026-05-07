@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row align-items-center mb-4">
+    <div class="col-md-6">
+        <h2 class="text-white m-0">Admin Dashboard</h2>
+    </div>
+    <div class="col-md-6 text-md-end mt-3 mt-md-0">
+        <a href="{{ url_for('download_report') }}" class="btn btn-primary-custom">
+            Download CSV Report
+        </a>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="glass-card text-center p-4">
+            <h4 class="section-title mb-3">Total Students Evaluated</h4>
+            <h1 class="display-4 fw-bold text-white m-0">{{ stats.total_students if stats.total_students else 0 }}</h1>
+        </div>
+    </div>
+    <div class="col-md-6 mt-4 mt-md-0">
+        <div class="glass-card text-center p-4">
+            <h4 class="section-title mb-3">Average CGPA</h4>
+            <h1 class="display-4 fw-bold text-white m-0">{{ "%.2f"|format(stats.avg_cgpa) if stats.avg_cgpa else "0.00" }}</h1>
+        </div>
+    </div>
+</div>
+
+<div class="glass-card">
+    <h4 class="section-title">Prediction History</h4>
+    <div class="table-responsive mt-3">
+        <table class="table table-hover table-borderless align-middle">
+            <thead style="border-bottom: 1px solid rgba(255,255,255,0.2);">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Branch</th>
+                    <th>Status</th>
+                    <th>Prob (%)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in predictions %}
+                <tr>
+                    <td>#{{ p.id }}</td>
+                    <td>{{ p.name }}</td>
+                    <td>{{ p.branch }}</td>
+                    <td>
+                        {% if p.prediction_status == 'Placed' %}
+                            <span class="badge bg-success">Placed</span>
+                        {% elif p.prediction_status == 'Likely to be Placed' %}
+                            <span class="badge bg-warning text-dark">Likely</span>
+                        {% else %}
+                            <span class="badge bg-danger">Low Prob</span>
+                        {% endif %}
+                    </td>
+                    <td><strong>{{ p.probability }}%</strong></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="8" class="text-center py-4 text-light text-opacity-50">No predictions recorded yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="glass-card mt-5">
+    <h4 class="section-title">Registered User Accounts</h4>
+    <div class="table-responsive mt-3">
+        <table class="table table-hover table-borderless align-middle">
+            <thead style="border-bottom: 1px solid rgba(255,255,255,0.2);">
+                <tr>
+                    <th>Account ID</th>
+                    <th>Full Name</th>
+                    <th>Email Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in users %}
+                <tr>
+                    <td>#{{ u.id }}</td>
+                    <td><strong style="color: var(--primary);">{{ u.name }}</strong></td>
+                    <td style="color: var(--primary);">{{ u.email }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3" class="text-center py-4 text-light text-opacity-50">No users registered yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

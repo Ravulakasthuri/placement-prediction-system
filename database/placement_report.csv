@@ -1,0 +1,21 @@
+id,user_id,name,email,branch,year,cgpa,aptitude,technical,communication,programming,logical,internships,projects,certificates,prediction_status,probability,specified_skills,backlogs,dsa,ml,system_design,dbms,oops,cloud,web_dev,coding_skills,dsa_score,ml_knowledge
+1,1,Kasthuri,ravulakasthuri@gmail.com,Computer Science,2,9.8,75,75,75,75,73,2,2,1,Placed,88.34,,0,0,0,0,0,0,0,0,0,0,0
+2,1,Kasthuri,ravulakasthuri@gmail.com,Computer Science,2,9.8,75,75,75,75,73,2,2,0,Placed,82.38,,0,0,0,0,0,0,0,0,0,0,0
+3,1,Kasthuri,ravulakasthuri@gmail.com,Computer Science,2,9.8,75,75,75,75,73,2,2,0,Placed,82.38,,0,0,0,0,0,0,0,0,0,0,0
+4,1,Kasthuri,ravulakasthuri@gmail.com,Computer Science,2,9.8,75,75,75,75,75,1,1,0,Needs Improvement,37.78,,0,0,0,0,0,0,0,0,0,0,0
+5,1,Kasthuri,ravulakasthuri@gmail.com,Electronics,2,7.8,75,75,75,75,75,2,2,0,Needs Improvement,24.94,,0,0,0,0,0,0,0,0,0,0,0
+6,1,Kasthuri,ravulakasthuri@gmail.com,Computer Science,3,9.8,86,84,81,83,81,2,2,0,Placed,92.8,,0,0,0,0,0,0,0,0,0,0,0
+7,1,Kasthuri,ravulakasthuri@gmail.com,Computer Science,2,7.6,70,75,75,75,75,2,2,0,Needs Improvement,18.65,,0,0,0,0,0,0,0,0,0,0,0
+8,1,Kasthuri,ravulakasthuri@gmail.com,Computer Science,3,7.6,89,75,75,93,75,2,2,0,Likely to be Placed,40.32,,0,0,0,0,0,0,0,0,0,0,0
+9,1,Kasthuri,ravulakasthuri@gmail.com,Computer Science,2,7.8,75,75,75,75,75,1,1,0,Needs Improvement,4.03,,0,0,0,0,0,0,0,0,0,0,0
+10,1,Kasthuri,ravulakasthuri@gmail.com,Computer Science,3,7.8,75,75,75,75,82,1,1,0,Needs Improvement,4.43,,0,0,0,0,0,0,0,0,0,0,0
+11,1,Kasthuri,ravulakasthuri@gmail.com,Computer Science,2,8.9,75,89,75,75,79,2,2,0,Likely to be Placed,70.18,,0,0,0,0,0,0,0,0,0,0,0
+12,1,Kasthuri,ravulakasthuri@gmail.com,Computer Science,2,8.9,75,89,75,75,79,2,2,0,Likely to be Placed,70.18,,0,0,0,0,0,0,0,0,0,0,0
+13,1,Kasthuri,ravulakasthuri@gmail.com,Computer Science,3,6.0,75,75,75,75,75,2,0,0,Needs Improvement,0.69,,0,0,0,0,0,0,0,0,0,0,0
+14,1,Kasthuri,ravulakasthuri@gmail.com,Computer Science,2,9.8,75,75,75,75,75,2,2,0,Placed,82.79,,0,0,0,0,0,0,0,0,0,0,0
+15,1,Kasthuri,ravulakasthuri@gmail.com,Computer Science,2,8.9,75,75,64,75,75,2,2,0,Likely to be Placed,55.05,,0,0,0,0,0,0,0,0,0,0,0
+16,1,Kasthuri,ravulakasthuri@gmail.com,Computer Science,2,5.7,0,0,0,0,0,1,1,0,Needs Improvement,0.0,,0,0,0,0,0,0,0,0,0,0,0
+17,4,Ravula Kasthuri,ravulakasthuri@gmail.com,Computer Science,2,6.7,75,100,100,75,75,2,2,0,Needs Improvement,19.36,"ml,system design",0,0,0,0,0,0,0,0,0,0,0
+18,4,Ravula Kasthuri,ravulakasthuri@gmail.com,Computer Science,2,8.9,85,68,87,93,88,2,1,2,Placed,100.0,,0,0,0,29,0,91,67,0,93,91,91
+19,4,Ravula Kasthuri,ravulakasthuri@gmail.com,Computer Science,2,6.7,75,59,87,85,75,2,2,1,Needs Improvement,35.67,,2,0,0,30,34,45,0,34,85,75,45
+20,4,Ravula Kasthuri,ravulakasthuri@gmail.com,Computer Science,2,6.8,93,61,91,100,93,1,2,1,Placed,81.81,,1,0,0,43,0,53,37,0,100,93,58

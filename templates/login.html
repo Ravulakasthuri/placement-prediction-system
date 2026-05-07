@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="glass-card">
+            <h2 class="text-center section-title">Member Login</h2>
+            <form action="{{ url_for('login') }}" method="POST">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" class="form-control" id="email" name="email" required placeholder="you@example.com">
+                </div>
+                <div class="mb-4">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required placeholder="••••••••">
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary-custom">Login</button>
+                </div>
+            </form>
+            <div class="text-center mt-3">
+                <p>Don't have an account? <a href="{{ url_for('signup') }}" style="color: #00f2fe;">Sign up</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

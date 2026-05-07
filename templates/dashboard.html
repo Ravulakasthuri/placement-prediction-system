@@ -1,0 +1,351 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    /* White Card Form Redesign matching image */
+    .white-form-card {
+        background: #f8f9fc;
+        border-radius: 20px;
+        padding: 3rem;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        color: #1a1f36; /* Dark text */
+    }
+    .white-form-card .section-title {
+        color: #1a1f36;
+        background: none;
+        -webkit-text-fill-color: initial;
+        font-weight: 800;
+        margin-bottom: 2rem;
+        font-size: 1.5rem;
+    }
+    .white-form-card .form-label {
+        color: #1a1f36;
+        font-weight: 800;
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+    }
+    .white-form-card .form-control, .white-form-card .form-select {
+        background: #1e2235;
+        border: none;
+        color: #ffffff;
+        border-radius: 10px;
+        padding: 0.9rem 1.2rem;
+    }
+    .white-form-card .form-control:focus, .white-form-card .form-select:focus {
+        background: #252a42;
+        box-shadow: 0 0 0 3px rgba(196, 113, 237, 0.3);
+        color: white;
+    }
+    .white-form-card input::placeholder {
+        color: rgba(255,255,255,0.4) !important;
+    }
+    /* Fix browser autofill background */
+    .white-form-card .form-control:-webkit-autofill,
+    .white-form-card .form-control:-webkit-autofill:hover, 
+    .white-form-card .form-control:-webkit-autofill:focus, 
+    .white-form-card .form-control:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 30px #1e2235 inset !important;
+        -webkit-text-fill-color: white !important;
+        transition: background-color 5000s ease-in-out 0s;
+    }
+    /* Buttons */
+    .white-form-card .btn-primary-custom {
+        background: linear-gradient(135deg, #a770ef, #cf8bf3, #fdb99b);
+        background: linear-gradient(135deg, #a770ef, #cf8bf3);
+        color: white;
+        border-radius: 30px;
+        padding: 0.8rem 2.5rem;
+        box-shadow: 0 8px 15px rgba(167, 112, 239, 0.3);
+    }
+    .white-form-card .btn-outline-light {
+        color: #1a1f36;
+        border-color: #d1d5db;
+    }
+    .white-form-card .btn-outline-light:hover {
+        background: #e5e7eb;
+        color: #1a1f36;
+    }
+    .white-form-card h6 {
+        color: #4b5563 !important;
+    }
+    .white-form-card .range-value {
+        background: rgba(167, 112, 239, 0.1);
+        color: #a770ef;
+    }
+    /* Range Slider Overrides for White Card */
+    .white-form-card input[type=range] {
+        background: transparent;
+    }
+    .white-form-card input[type=range]::-webkit-slider-runnable-track {
+        background: #e2e8f0;
+        border: 1px solid #cbd5e1;
+        height: 8px;
+        border-radius: 10px;
+    }
+    .white-form-card input[type=range]::-webkit-slider-thumb {
+        background: #a770ef;
+        border: 2px solid white;
+        box-shadow: 0 0 10px rgba(167, 112, 239, 0.5);
+        margin-top: -6px;
+        height: 20px;
+        width: 20px;
+    }
+    .white-form-card input[type=range]:focus::-webkit-slider-runnable-track {
+        background: #cbd5e1;
+    }
+</style>
+
+<div class="row justify-content-center mt-4 mb-5">
+    <div class="col-lg-8">
+        <div class="text-center mb-5">
+            <span class="hero-badge" style="background: rgba(196, 113, 237, 0.1); border-color: rgba(196, 113, 237, 0.3); color: #c471ed;">
+                <i class="bi bi-lightning-charge-fill"></i> AI-Powered Placement Predictor
+            </span>
+            <h1 class="display-5 fw-bold mb-3" style="background: -webkit-linear-gradient(45deg, #c471ed, #12c2e9); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Predict Your Placement</h1>
+            <p class="text-light text-opacity-75">Fill in your details for a personalized placement score & roadmap</p>
+        </div>
+
+        <div class="stepper-container">
+            <div class="stepper-wrapper">
+                <div class="stepper-line"></div>
+                <div class="stepper-progress" id="stepperProgress" style="width: 0%;"></div>
+                
+                <div class="stepper-item active" id="stepIndicator1">
+                    <div class="stepper-icon"><i class="bi bi-person-fill"></i></div>
+                    <div class="stepper-title">Profile</div>
+                </div>
+                <div class="stepper-item" id="stepIndicator2">
+                    <div class="stepper-icon"><i class="bi bi-mortarboard-fill"></i></div>
+                    <div class="stepper-title">Academics</div>
+                </div>
+                <div class="stepper-item" id="stepIndicator3">
+                    <div class="stepper-icon"><i class="bi bi-code-slash"></i></div>
+                    <div class="stepper-title">Skills</div>
+                </div>
+                <div class="stepper-item" id="stepIndicator4">
+                    <div class="stepper-icon"><i class="bi bi-briefcase-fill"></i></div>
+                    <div class="stepper-title">Experience</div>
+                </div>
+                <div class="stepper-item" id="stepIndicator5">
+                    <div class="stepper-icon"><i class="bi bi-globe2"></i></div>
+                    <div class="stepper-title">Certificates</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="white-form-card">
+            <form action="{{ url_for('predict') }}" method="POST" id="predictionForm" enctype="multipart/form-data">
+                
+                <!-- STEP 1: Profile Information -->
+                <div class="form-step active" id="step1">
+                    <h4 class="section-title">1. Profile</h4>
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3">
+                            <label for="name" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ user_name }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="email" name="email" required placeholder="name@college.edu">
+                        </div>
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <label for="branch" class="form-label">Branch / Department</label>
+                            <select class="form-select" id="branch" name="branch" required>
+                                <option value="">Select Branch</option>
+                                <option value="ECE">ECE</option>
+                                <option value="Chemical">Chemical</option>
+                                <option value="EE">EE</option>
+                                <option value="CE">CE</option>
+                                <option value="Computer Science">Computer Science</option>
+                                <option value="Information Technology">Information Technology</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end mt-4">
+                        <button type="button" class="btn btn-primary-custom" onclick="nextStep(1)">Next <i class="bi bi-arrow-right ms-2"></i></button>
+                    </div>
+                </div>
+
+                <!-- STEP 2: Academic Performance -->
+                <div class="form-step" id="step2">
+                    <div class="row mb-4 text-center">
+                        <div class="col-md-6 mb-3">
+                            <label for="cgpa" class="form-label d-block text-start">CGPA</label>
+                            <input type="number" step="0.01" min="0" max="10" class="form-control form-control-lg text-center mx-auto" id="cgpa" name="cgpa" required placeholder="e.g. 8.5">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="backlogs" class="form-label d-block text-start">Active Backlogs</label>
+                            <input type="number" min="0" max="20" class="form-control form-control-lg text-center mx-auto" id="backlogs" name="backlogs" required value="0">
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mt-5">
+                        <button type="button" class="btn btn-outline-light" onclick="prevStep(2)"><i class="bi bi-arrow-left me-2"></i> Back</button>
+                        <button type="button" class="btn btn-primary-custom" onclick="nextStep(2)">Next <i class="bi bi-arrow-right ms-2"></i></button>
+                    </div>
+                </div>
+
+                <!-- STEP 3: Core Competencies -->
+                <div class="form-step" id="step3">
+                    <h4 class="section-title">3. Skills Matrix</h4>
+                    
+                    <div class="row">
+                        <h6 class="text-white-50 mb-3 small text-uppercase fw-bold">Core Skills</h6>
+                        <div class="col-md-6 mb-4">
+                            <label for="aptitude_score" class="form-label">Aptitude Score (%) <span id="aptitudeValue" class="range-value">75</span></label>
+                            <input type="range" min="0" max="100" value="75" class="form-range" id="aptitude_score" name="aptitude_score" required>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label for="communication_skills" class="form-label">Communication Skills (%) <span id="commValue" class="range-value">75</span></label>
+                            <input type="range" min="0" max="100" value="75" class="form-range" id="communication_skills" name="communication_skills" required>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label for="coding_skills" class="form-label">Coding Skills (%) <span id="codingValue" class="range-value">75</span></label>
+                            <input type="range" min="0" max="100" value="75" class="form-range" id="coding_skills" name="coding_skills" required>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label for="dsa_score" class="form-label">DSA Score (%) <span id="dsaValue" class="range-value">75</span></label>
+                            <input type="range" min="0" max="100" value="75" class="form-range" id="dsa_score" name="dsa_score" required>
+                        </div>
+                    </div>
+
+                    <div class="p-3 mb-4 rounded" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);">
+                        <h6 class="text-white-50 mb-3 small text-uppercase fw-bold">Advanced Skills & Activities</h6>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="ml_knowledge" class="form-label small">ML Knowledge (%) <span id="mlValue" class="text-primary fw-bold ms-2">0</span></label>
+                                <input type="range" min="0" max="100" value="0" class="form-range" id="ml_knowledge" name="ml_knowledge">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="system_design" class="form-label small">System Design (%) <span id="sdValue" class="text-primary fw-bold ms-2">0</span></label>
+                                <input type="range" min="0" max="100" value="0" class="form-range" id="system_design" name="system_design">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="hackathons" class="form-label small">Hackathons (Count)</label>
+                                <input type="number" min="0" value="0" class="form-control" id="hackathons" name="hackathons">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="open_source_contributions" class="form-label small">Open Source PRs</label>
+                                <input type="number" min="0" value="0" class="form-control" id="open_source_contributions" name="open_source_contributions">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="extracurriculars" class="form-label small">Extracurriculars</label>
+                                <input type="number" min="0" value="0" class="form-control" id="extracurriculars" name="extracurriculars">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-outline-light" onclick="prevStep(3)"><i class="bi bi-arrow-left me-2"></i> Back</button>
+                        <button type="button" class="btn btn-primary-custom" onclick="nextStep(3)">Next <i class="bi bi-arrow-right ms-2"></i></button>
+                    </div>
+                </div>
+
+                <!-- STEP 4: Experience -->
+                <div class="form-step" id="step4">
+                    <h4 class="section-title">4. Experience</h4>
+                    <div class="row align-items-center mb-4">
+                        <div class="col-md-6 mb-3 mb-md-0 text-center">
+                            <label for="internships" class="form-label d-block text-start">Internships (Number)</label>
+                            <input type="number" min="0" class="form-control form-control-lg text-center" id="internships" name="internships" required placeholder="0">
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <label for="projects_count" class="form-label d-block text-start">Projects (Number)</label>
+                            <input type="number" min="0" class="form-control form-control-lg text-center" id="projects_count" name="projects_count" required placeholder="0">
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mt-5">
+                        <button type="button" class="btn btn-outline-light" onclick="prevStep(4)"><i class="bi bi-arrow-left me-2"></i> Back</button>
+                        <button type="button" class="btn btn-primary-custom" onclick="nextStep(4)">Next <i class="bi bi-arrow-right ms-2"></i></button>
+                    </div>
+                </div>
+
+                <!-- STEP 5: Certificates & Submit -->
+                <div class="form-step" id="step5">
+                    <h4 class="section-title">5. Certifications</h4>
+                    <div class="mb-5 text-center">
+                        <label for="certifications" class="form-label d-block text-start">Number of Certifications</label>
+                        <input type="number" min="0" class="form-control form-control-lg text-center mx-auto w-50" id="certifications" name="certifications" required value="0">
+                        <p class="text-muted small mt-3">Number of recognized certifications completed (AWS, Google, Coursera, etc.)</p>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mt-5">
+                        <button type="button" class="btn btn-outline-light" onclick="prevStep(5)"><i class="bi bi-arrow-left me-2"></i> Back</button>
+                        <button type="submit" class="btn btn-primary-custom" style="background: linear-gradient(135deg, #11998e, #38ef7d); box-shadow: 0 10px 20px rgba(56,239,125,0.3);">
+                            <i class="bi bi-magic me-2"></i> Predict Result
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Slider Sync Updates
+    function syncSlider(id, targetId) {
+        let el = document.getElementById(id);
+        if(el) {
+            el.addEventListener('input', function() {
+                document.getElementById(targetId).innerText = this.value;
+            });
+        }
+    }
+    syncSlider('aptitude_score', 'aptitudeValue');
+    syncSlider('communication_skills', 'commValue');
+    syncSlider('coding_skills', 'codingValue');
+    syncSlider('dsa_score', 'dsaValue');
+    
+    // Advanced Slider sync
+    syncSlider('ml_knowledge', 'mlValue');
+    syncSlider('system_design', 'sdValue');
+
+    // Multi-step logic
+    const totalSteps = 5;
+    
+    function validateStep(step) {
+        const stepElement = document.getElementById('step' + step);
+        const inputs = stepElement.querySelectorAll('input, select, textarea');
+        for (let input of inputs) {
+            if (!input.checkValidity()) {
+                input.reportValidity();
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function nextStep(currentStep) {
+        if (!validateStep(currentStep)) return;
+        
+        document.getElementById('step' + currentStep).classList.remove('active');
+        document.getElementById('stepIndicator' + currentStep).classList.add('completed');
+        document.getElementById('stepIndicator' + currentStep).classList.remove('active');
+        
+        const next = currentStep + 1;
+        document.getElementById('step' + next).classList.add('active');
+        document.getElementById('stepIndicator' + next).classList.add('active');
+        
+        updateProgress(next);
+    }
+
+    function prevStep(currentStep) {
+        document.getElementById('step' + currentStep).classList.remove('active');
+        document.getElementById('stepIndicator' + currentStep).classList.remove('active');
+        
+        const prev = currentStep - 1;
+        document.getElementById('step' + prev).classList.add('active');
+        document.getElementById('stepIndicator' + prev).classList.remove('completed');
+        document.getElementById('stepIndicator' + prev).classList.add('active');
+        
+        updateProgress(prev);
+    }
+    
+    function updateProgress(step) {
+        const percentage = ((step - 1) / (totalSteps - 1)) * 100;
+        document.getElementById('stepperProgress').style.width = percentage + '%';
+    }
+</script>
+{% endblock %}

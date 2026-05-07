@@ -1,0 +1,370 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    /* White Theme Styles */
+    .white-form-card {
+        background: #f8f9fc;
+        border-radius: 20px;
+        padding: 3rem;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        color: #1a1f36;
+    }
+    .inner-card {
+        background: #ffffff;
+        border-radius: 20px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    }
+    /* Multi-color aesthetic classes for result page */
+    .color-card-tech { background: linear-gradient(135deg, rgba(255, 95, 109, 0.2), rgba(255, 195, 113, 0.2)); border-left: 5px solid #ff5f6d; }
+    .color-card-intern { background: linear-gradient(135deg, rgba(16, 141, 199, 0.2), rgba(239, 142, 56, 0.2)); border-left: 5px solid #108dc7; }
+    .color-card-comm { background: linear-gradient(135deg, rgba(86, 171, 47, 0.2), rgba(168, 224, 99, 0.2)); border-left: 5px solid #56ab2f; }
+    .color-card-great { background: linear-gradient(135deg, rgba(17, 153, 142, 0.2), rgba(56, 239, 125, 0.2)); border-left: 5px solid #11998e; }
+    
+    .prob-display {
+        font-size: 4.5rem;
+        font-weight: 800;
+        background: -webkit-linear-gradient(#00f2fe, #4facfe);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0px 4px 10px rgba(0,242,254,0.3);
+    }
+
+    .recommendation-card {
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        color: #1a1f36;
+    }
+    
+    .recommendation-card h4 {
+        font-weight: bold;
+    }
+
+    .recommendation-card a {
+        color: #0052cc;
+        text-decoration: underline;
+        font-weight: 600;
+        margin-right: 15px;
+        display: inline-block;
+        transition: 0.2s;
+    }
+
+    .recommendation-card a:hover {
+        color: #00f2fe;
+    }
+</style>
+
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <div class="white-form-card text-center">
+            <h2 class="section-title mb-4" style="color:#1a1f36; background:none; -webkit-text-fill-color:initial; font-weight:800; border-bottom:none;">Placement Score for {{ data.name }}</h2>
+            
+            <div class="row align-items-center mb-5">
+                <div class="col-md-6 mb-4 mb-md-0">
+                    <div style="width: 280px; height: 280px; margin: 0 auto; position: relative;">
+                        <canvas id="resultChart"></canvas>
+                        <!-- Probability strongly overlaid -->
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                            <span class="prob-display">{{ data.probability }}%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 text-center text-md-start">
+                    <h3 class="mb-2 text-dark">Status:</h3>
+                    {% if data.status == 'Placed' %}
+                        <h2 class="fw-bold" style="color: #11998e;">{{ data.status }}</h2>
+                    {% elif data.status == 'Likely to be Placed' %}
+                        <h2 class="fw-bold" style="color: #f6d365;">{{ data.status }}</h2>
+                    {% else %}
+                        <h2 class="fw-bold" style="color: #ff5f6d;">{{ data.status }}</h2>
+                    {% endif %}
+                    
+                    <p class="mt-4 text-muted fs-5">
+                        Your placement probability is based on evaluating your CGPA, technical depth, project scope, practical internships, and soft skills against historical placement data.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Skill Gap Analysis Section (Image Match) -->
+            <div class="row align-items-stretch mt-5 mb-5">
+                <!-- Left Card: Radar Chart -->
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <div class="p-4 h-100 inner-card">
+                        <h4 class="fw-bold mb-1 text-dark">Skills Radar</h4>
+                        <p class="text-muted small mb-4">Overall competency breakdown</p>
+                        <div style="width: 100%; max-width: 320px; margin: 0 auto; position: relative;">
+                            <canvas id="radarChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Card: Skills Analysis -->
+                <div class="col-lg-6">
+                    <div class="p-4 h-100 text-start inner-card">
+                        <h4 class="fw-bold mb-4 text-dark">
+                            <span style="background: rgba(196, 113, 237, 0.2); color: #c471ed; padding: 4px 8px; border-radius: 6px; font-size: 1rem; margin-right: 8px;"><i class="bi bi-lightning-charge-fill"></i></span> Skills Analysis
+                        </h4>
+                        
+                        <h6 class="text-warning mb-2" style="font-size: 0.9rem; color: #f59e0b !important;"><i class="bi bi-exclamation-triangle"></i> Skills You Should Learn</h6>
+                        <p class="text-muted small mb-3">These high-demand skills are missing from your profile:</p>
+                        <div class="d-flex flex-wrap gap-2 mb-4">
+                            {% for skill in data.missing_skills %}
+                            <span class="badge rounded-pill fw-normal" style="border: 1px solid rgba(245, 158, 11, 0.5); color: #d97706; background: rgba(245, 158, 11, 0.1); padding: 0.5rem 1rem;">
+                                + {{ skill }}
+                            </span>
+                            {% endfor %}
+                            {% if data.missing_skills|length == 0 %}
+                            <span class="text-success small"><i class="bi bi-check-circle"></i> You have all major high-demand skills!</span>
+                            {% endif %}
+                        </div>
+                        
+                        <hr style="border-color: #e2e8f0; margin: 1.5rem 0;">
+                        
+                        <h6 class="text-dark mb-3 fw-bold" style="font-size: 0.95rem;">Skills by Domain</h6>
+                        
+                        {% for domain, score in data.domain_scores.items() %}
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted" style="font-size: 0.85rem; font-weight: 600;">{{ domain }}</span>
+                                <span class="text-primary" style="font-size: 0.85rem; font-weight: 700;">{{ score }}</span>
+                            </div>
+                            {% set parts = score.split('/') %}
+                            {% set percent = (parts[0]|float / parts[1]|float) * 100 %}
+                            <div class="progress" style="height: 6px; background: #e2e8f0; border-radius: 10px;">
+                                <div class="progress-bar" role="progressbar" style="width: {{ percent }}%; border-radius: 10px; background: linear-gradient(90deg, #c471ed, #12c2e9);"></div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        
+                    </div>
+                </div>
+            </div>
+
+            <!-- Company Matches Section -->
+            <div class="text-start mt-5">
+                <h3 class="section-title" style="color:#10b981; background:none; -webkit-text-fill-color:initial; font-weight:800;"><i class="bi bi-buildings"></i> Top Company Matches</h3>
+                <p class="text-muted mb-4">Based on your technical profile and predicted placement probability, here are the top companies you align with.</p>
+                <div class="row">
+                    {% for company in data.company_recommendations %}
+                    <div class="col-md-6 mb-4">
+                        <div class="p-4 h-100 rounded-4 inner-card" style="transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                            <div class="d-flex align-items-center mb-3">
+                                <div style="width: 48px; height: 48px; border-radius: 12px; background: {{ company.color }}; display: flex; align-items: center; justify-content: center; margin-right: 15px; box-shadow: 0 4px 10px {{ company.color }}40;">
+                                    <i class="bi {{ company.logo }} fs-4 text-white"></i>
+                                </div>
+                                <h4 class="mb-0 text-dark fw-bold">{{ company.name }}</h4>
+                            </div>
+                            <p class="text-muted small mb-3">
+                                <strong>Focus Areas:</strong> {{ company.focus }}
+                            </p>
+                            <a href="{{ company.link }}" target="_blank" class="btn btn-sm" style="background: rgba(0,0,0,0.05); color: #1a1f36; border: 1px solid #e2e8f0; transition: all 0.2s; font-weight:600;" onmouseover="this.style.background='rgba(0,0,0,0.1)'" onmouseout="this.style.background='rgba(0,0,0,0.05)'">
+                                View Careers <i class="bi bi-arrow-up-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Personalized Recommendations Section -->
+            <div class="text-start mt-5">
+                <h3 class="section-title" style="color:#a770ef; background:none; -webkit-text-fill-color:initial; font-weight:800;">Personalized Recommendations</h3>
+                
+                {% set rec_count = 0 %}
+                
+                {% if data.probability > 75 %}
+                    <div class="recommendation-card color-card-great">
+                        <h4>🌟 Outstanding Profile!</h4>
+                        <p class="mb-2">You are extremely well-positioned for top-tier companies. Deepen your systems knowledge and practice high-level system design.</p>
+                        <a href="https://www.pramp.com/" target="_blank">Pramp (Mock)</a>
+                        <a href="https://github.com/donnemartin/system-design-primer" target="_blank">Sys Design Primer</a>
+                        <a href="https://www.glassdoor.com/Interview/" target="_blank">Glassdoor Prep</a>
+                    </div>
+                    {% set rec_count = 1 %}
+                {% endif %}
+
+                {% if data.coding_skills < 80 %}
+                    <div class="recommendation-card color-card-tech">
+                        <h4>💻 Level Up Technical Base</h4>
+                        <p class="mb-2">Your technical foundation needs sharpening for top recruiters. Re-visit core concepts.</p>
+                        <a href="https://leetcode.com/explore/" target="_blank">LeetCode Explore</a>
+                        <a href="https://www.geeksforgeeks.org/" target="_blank">GeeksforGeeks</a>
+                        <a href="https://www.freecodecamp.org/" target="_blank">freeCodeCamp</a>
+                    </div>
+                    {% set rec_count = 1 %}
+                {% endif %}
+                
+                {% if data.dsa_score < 80 %}
+                    <div class="recommendation-card" style="background: linear-gradient(135deg, rgba(132, 94, 194, 0.2), rgba(214, 93, 177, 0.2)); border-left: 5px solid #d65db1;">
+                        <h4>⌨️ Enhance Programming Fluency</h4>
+                        <p class="mb-2">Algorithms and coding speed are crucial. Practice solving problems efficiently in your preferred language.</p>
+                        <a href="https://www.hackerrank.com/" target="_blank">HackerRank</a>
+                        <a href="https://codeforces.com/" target="_blank">Codeforces</a>
+                        <a href="https://www.algoexpert.io/" target="_blank">AlgoExpert</a>
+                    </div>
+                    {% set rec_count = 1 %}
+                {% endif %}
+                
+                {% if data.aptitude_score < 80 %}
+                    <div class="recommendation-card" style="background: linear-gradient(135deg, rgba(255, 150, 113, 0.2), rgba(255, 199, 95, 0.2)); border-left: 5px solid #ff9671;">
+                        <h4>🧠 Sharpen Logical Reasoning</h4>
+                        <p class="mb-2">Aptitude rounds rely heavily on logical deduction. Improve your puzzle-solving pacing.</p>
+                        <a href="https://www.indiabix.com/logical-reasoning/questions-and-answers/" target="_blank">IndiaBIX Logic</a>
+                        <a href="https://brilliant.org/" target="_blank">Brilliant.org</a>
+                        <a href="https://testbook.com/" target="_blank">Testbook Prep</a>
+                    </div>
+                    {% set rec_count = 1 %}
+                {% endif %}
+
+                {% if data.internships <= 1 %}
+                    <div class="recommendation-card color-card-intern">
+                        <h4>🏢 Broaden Industry Experience</h4>
+                        <p class="mb-2">Practical experience builds trust. Make sure you apply to summer internships to boost your resume.</p>
+                        <a href="https://internshala.com/" target="_blank">Internshala</a>
+                        <a href="https://wellfound.com/jobs" target="_blank">Wellfound (AngelList)</a>
+                        <a href="https://www.linkedin.com/jobs/internship-jobs" target="_blank">LinkedIn Internships</a>
+                    </div>
+                    {% set rec_count = 1 %}
+                {% endif %}
+
+                {% if data.communication_skills < 80 %}
+                    <div class="recommendation-card color-card-comm">
+                        <h4>🗣️ Boost Communication Abilities</h4>
+                        <p class="mb-2">Soft skills make or break behavioral rounds. Work on articulating your thoughts and active listening.</p>
+                        <a href="https://www.coursera.org/learn/communication-skills" target="_blank">Coursera Skills</a>
+                        <a href="https://toastmasters.org/" target="_blank">Toastmasters</a>
+                        <a href="https://www.edx.org/course/business-communications" target="_blank">edX Business Comm</a>
+                    </div>
+                    {% set rec_count = 1 %}
+                {% endif %}
+                
+                {% if not rec_count %}
+                     <div class="recommendation-card color-card-great">
+                        <h4>🚀 Keep up the fantastic work!</h4>
+                        <p class="mb-2">Your profile is exceptionally well-rounded. Continue expanding your networks and keep building great side-projects!</p>
+                        <a href="https://github.com/" target="_blank">GitHub Projects</a>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="mt-5">
+                <a href="{{ url_for('dashboard') }}" class="btn btn-primary-custom btn-lg" style="background: linear-gradient(135deg, #a770ef, #cf8bf3); color:white;">Evaluate Another Profile</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('resultChart').getContext('2d');
+        const prob = {{ data.probability }};
+        const remainder = 100 - prob;
+        
+        // Multi-color dynamic charting
+        let colorGrad = ctx.createLinearGradient(0, 0, 0, 400);
+        if(prob < 40) {
+            colorGrad.addColorStop(0, '#ff5f6d');
+            colorGrad.addColorStop(1, '#ffc371');
+        } else if(prob <= 75) {
+            colorGrad.addColorStop(0, '#f6d365');
+            colorGrad.addColorStop(1, '#fda085');
+        } else {
+            colorGrad.addColorStop(0, '#11998e');
+            colorGrad.addColorStop(1, '#38ef7d');
+        }
+
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Probability Score', 'Risk'],
+                datasets: [{
+                    data: [prob, remainder],
+                    backgroundColor: [colorGrad, '#e2e8f0'],
+                    borderWidth: 0,
+                    hoverOffset: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '85%', // Making it thin like a ring to fit the number inside
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: false // Disabled tooltip as text is in center
+                    }
+                }
+            }
+        });
+
+        // Skill Gap Radar Chart
+        const radarCtx = document.getElementById('radarChart').getContext('2d');
+        const userSkills = [
+            {{ data.cgpa * 10 }}, 
+            {{ data.coding_skills }}, 
+            {{ data.communication_skills }}, 
+            {{ data.dsa_score }}, 
+            {{ data.aptitude_score }},
+            {{ data.internships * 20 }},
+            {{ data.projects_count * 10 }},
+            {{ data.hackathons * 10 }}
+        ];
+        const benchmark = [80, 80, 80, 80, 80, 80, 80, 80];
+
+        new Chart(radarCtx, {
+            type: 'radar',
+            data: {
+                labels: ['CGPA', 'Coding', 'Communication', 'DSA', 'Aptitude', 'Internships', 'Projects', 'Hackathons'],
+                datasets: [
+                    {
+                        label: 'Your Profile',
+                        data: userSkills,
+                        backgroundColor: 'rgba(0, 242, 254, 0.3)',
+                        borderColor: '#00f2fe',
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#00f2fe',
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'Industry Target',
+                        data: benchmark,
+                        backgroundColor: 'rgba(0, 0, 0, 0.02)',
+                        borderColor: 'rgba(0, 0, 0, 0.15)',
+                        borderDash: [5, 5],
+                        pointBackgroundColor: 'transparent',
+                        pointBorderColor: 'transparent',
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                scales: {
+                    r: {
+                        angleLines: { color: '#e2e8f0' },
+                        grid: { color: '#e2e8f0' },
+                        pointLabels: {
+                            color: '#4b5563',
+                            font: { family: 'Outfit', size: 11, weight: '700' }
+                        },
+                        ticks: { display: false, min: 0, max: 100 } /* hide numbers on rings */
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: true }
+                }
+            }
+        });
+
+    });
+</script>
+{% endblock %}

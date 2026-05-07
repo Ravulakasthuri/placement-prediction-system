@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row align-items-center" style="min-height: 70vh;">
+    <div class="col-lg-6 text-center text-lg-start mb-5 mb-lg-0 relative z-10">
+        <span class="hero-badge">AI-Powered Algorithm</span>
+        <h1 class="display-3 fw-bold text-white mb-4" style="line-height: 1.1;">
+            Predict Your Next <br>
+            <span style="background: -webkit-linear-gradient(45deg, #00f2fe, #4facfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Career Move</span>
+        </h1>
+        <p class="lead text-light mb-5 fs-4" style="opacity: 0.8; max-width: 500px; margin: 0 auto lg-0;">
+            Benchmark your profile against thousands of successful placements. Instantly discover your probability and exact areas to improve.
+        </p>
+        <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-lg-start gap-3">
+            <a href="{{ url_for('signup') }}" class="btn btn-primary-custom">Get Started Today</a>
+            <a href="{{ url_for('login') }}" class="btn btn-outline-light">Member Login</a>
+        </div>
+    </div>
+    
+    <div class="col-lg-6 position-relative">
+        <!-- Abstract Glass Floating Card representation for Hero Graphic -->
+        <div class="glass-card" style="padding: 3rem; transform: rotate(2deg) scale(1.05);">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h5 class="text-secondary mb-0">System Probability</h5>
+                    <h2 class="text-white fw-bold mb-0">94.5%</h2>
+                </div>
+                <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #11998e, #38ef7d); display: flex; align-items:center; justify-content:center; box-shadow: 0 10px 20px rgba(56,239,125,0.4);">
+                    <svg width="24" height="24" fill="white" viewBox="0 0 16 16"><path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/></svg>
+                </div>
+            </div>
+            
+            <div class="mb-4">
+                <div class="d-flex justify-content-between mb-1"><small>Algorithm Accuracy</small><small>High</small></div>
+                <div class="progress" style="height: 6px; background: rgba(255,255,255,0.1);">
+                    <div class="progress-bar" style="width: 95%; background: var(--primary);"></div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-3">
+                <div class="p-3 rounded flex-fill" style="background: rgba(0,242,254,0.1); border: 1px solid rgba(0,242,254,0.2);">
+                    <small style="color: #00f2fe;">Data Points</small>
+                    <h4 class="mb-0 text-white">20,000+</h4>
+                </div>
+                <div class="p-3 rounded flex-fill" style="background: rgba(246,211,101,0.1); border: 1px solid rgba(246,211,101,0.2);">
+                    <small style="color: #f6d365;">Parameters</small>
+                    <h4 class="mb-0 text-white">5 Core</h4>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Background decorative blur card behind the main object -->
+        <div class="glass-card position-absolute" style="top: 20px; left: -20px; right: 20px; bottom: -20px; z-index: -1; opacity: 0.5; filter: blur(10px); transform: rotate(-5deg);"></div>
+    </div>
+</div>
+{% endblock %}

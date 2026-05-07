@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="glass-card" style="border-left: 5px solid #f6d365;">
+            <h2 class="text-center section-title" style="color:#f6d365; border-bottom-color: rgba(246, 211, 101, 0.3);">Admin Access</h2>
+            <form action="{{ url_for('admin_login') }}" method="POST">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Admin Email</label>
+                    <input type="email" class="form-control" id="email" name="email" required placeholder="admin@admin.com">
+                </div>
+                <div class="mb-4">
+                    <label for="password" class="form-label">Admin Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required placeholder="••••••••">
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary-custom" style="background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); color:#0f2027;">Secure Login</button>
+                </div>
+            </form>
+            <div class="text-center mt-4">
+                <small class="text-light text-opacity-50">Strictly authorized personnel only.</small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
